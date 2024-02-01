@@ -1,55 +1,44 @@
 using System.Buffers;
 using System.Text;
+using System.Text.Json;
 using WebServer.Abstractions;
 using WebServer.Abstractions.Contexts.Requests;
 using WebServer.Abstractions.HttpProtocols;
+using WebServer.Abstractions.Urls;
 
 namespace WebServer.Parsers;
 
 public class HttpRequestParser : IHttpComponentParser
 {
-    private static readonly byte[] HTTP1_1_Bytes = Encoding.ASCII.GetBytes("HTTP/1.1");
-    private static readonly byte[] HTTP1_1_CR_Bytes = Encoding.ASCII.GetBytes("HTTP/1.1\r");
-    private int _maxUrlPartLength;
-    public HttpRequestParser(int maxUrlPartLength = -1) =>  _maxUrlPartLength = maxUrlPartLength == -1 ? maxUrlPartLength = 8192 : maxUrlPartLength;
+    public HttpRequest ParserHttpRequest(string content)
+    {
+        var requestContent = content.Split("\r\n\r\n");
+        if (requestContent.Length == 0)
+            throw new Exception("Request isn't a HTTP Request");
+        
+        //parser to header
+        var header = requestContent[0];
+        string[] headerLines = header.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+        string requestLine = headerLines[0];
+        string[] requestLineParts = requestLine.Split(' ');
+        var httpMethod = requestLineParts[0];
+        var requestUri = requestLineParts[1];
 
-    private static readonly Dictionary<HttpMethod, byte[]> supportedMethodBytes = new() {
+        var httpRequestHeader = new HttpRequestHeader();
+        for (int i = 1; i < headerLines.Length; i++)
         {
-            HttpMethod.Get,
-            Encoding.ASCII.GetBytes(HttpMethods.GET.ToString())
-        },
-        {
-            HttpMethod.Post,
-            Encoding.ASCII.GetBytes(HttpMethods.POST.ToString())
-        },
-        {
-            HttpMethod.Put,
-            Encoding.ASCII.GetBytes(HttpMethods.PUT.ToString())
-        },
-        {
-            HttpMethod.Delete,
-            Encoding.ASCII.GetBytes(HttpMethods.DELETE.ToString())
-        },
-        {
-            HttpMethod.Connect,
-            Encoding.ASCII.GetBytes(HttpMethods.CONNECT.ToString())
-        },
-        {
-            HttpMethod.Options,
-            Encoding.ASCII.GetBytes(HttpMethods.OPTIONS.ToString())
-        },
-        {
-            HttpMethod.Trace,
-            Encoding.ASCII.GetBytes(HttpMethods.TRACE.ToString())
+            string[] headerParts = headerLines[i].Split(new char[] { ':' }, 2);
+            if (headerParts.Length == 2)
+            {
+                httpRequestHeader.Add(headerParts[0], headerParts[1].Trim());
+            }
         }
-    };
-    public HttpRequestHeader ParserHttpRequestHeader(ReadOnlySequence<byte> bytes)
-    {
-        throw new NotImplementedException();
-    }
 
-    public HttpRequestLine ParserHttpRequestLine(ReadOnlySequence<byte> bytes)
-    {
-        throw new NotImplementedException();
+        return new HttpRequest(
+            httpMethod,
+            httpRequestHeader,
+            requestContent.Length > 1 ? JsonSerializer.Deserialize<object>(requestContent[1]) : null,
+            new HttpUrl(requestUri)
+        );
     }
 }

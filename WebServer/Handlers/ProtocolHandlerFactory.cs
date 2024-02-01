@@ -13,7 +13,7 @@ namespace WebServer.Handlers
         private readonly IServiceProvider _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         public IProtocolHandler Create(string version)
         {
-            if(version == HttpVersion.Http11)
+            if(version == HttpVersions.Http11)
             {
                 return new Http11ProtocolHandler(
                         serviceProvider,

@@ -8,5 +8,6 @@ namespace WebServer.Abstractions
 {
     public interface IProtocolHandler
     {
+        Task Handle(byte[] buffer);
     }
 }
