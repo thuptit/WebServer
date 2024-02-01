@@ -10,7 +10,6 @@ namespace WebServer.Abstractions
 {
     public interface IHttpComponentParser
     {
-        HttpRequestHeader ParserHttpRequestHeader(ReadOnlySequence<byte> bytes);
-        HttpRequestLine ParserHttpRequestLine(ReadOnlySequence<byte> bytes);
+        HttpRequest ParserHttpRequest(string content);
     }
 }

@@ -9,10 +9,11 @@ namespace WebServer
 {
     public static class WebServerExtensions
     {
-        public static byte[] GetSequenceBytes(this NetworkStream stream)
+        public static byte[] GetBytes(this NetworkStream stream)
         {
             var bytes = new byte[2048];
             int ok = stream.Read(bytes, 0, bytes.Length);
+            //TODO: check if ok variable equals 0
             return bytes;
         }
     }

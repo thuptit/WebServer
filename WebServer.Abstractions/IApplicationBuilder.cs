@@ -8,7 +8,7 @@ namespace WebServer.Abstractions
 {
     public interface IApplicationBuilder
     {
-        IServiceProvider ServiceProvider { get; set; }
+        IServiceProvider ServiceProvider { get; }
         IApplicationBuilder Use(Func<RequestDelegate, RequestDelegate> middleware);
         RequestDelegate Build();
     }

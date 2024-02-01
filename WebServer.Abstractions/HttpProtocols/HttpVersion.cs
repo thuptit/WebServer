@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebServer.Abstractions.HttpProtocols
 {
-    public class HttpVersion
+    public static class HttpVersions
     {
         public const string Http11 = "HTTP/1.1";
         public const string Http2 = "HTTP/2";

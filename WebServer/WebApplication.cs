@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using Microsoft.Extensions.DependencyInjection;
 using WebServer.Abstractions;
+using WebServer.Abstractions.HttpProtocols;
+using WebServer.Parsers;
 
 namespace WebServer
 {
@@ -15,20 +18,24 @@ namespace WebServer
         /// default = 5000 if cannot get host config from appsettings.{environment}.json
         /// </summary>
         private string _host = "127.0.0.1";
-        public IServiceProvider ServiceProvider { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public static WebApplicationBuilder CreateWebBuilder() => new WebApplicationBuilder();
+        /// <summary>
+        /// HTTP/1.1 is default if not set
+        /// </summary>
+        private string _protocol = HttpVersions.Http11;
 
-        public RequestDelegate Build()
+        public IServiceProvider ServiceProvider => Services.BuildServiceProvider();
+
+        public IServiceCollection Services { get; }
+        public static WebApplicationBuilder CreateWebBuilder() => new WebApplicationBuilder()
+            .AddProtocolHandler()
+            .AddHttpRequestParser()
+            .AddProtocolHandlerFactory();
+
+        public WebApplication()
         {
-            throw new NotImplementedException();
+            Services = new ServiceCollection();
         }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task Start()
         {
             var tcpConnection = new TcpListener(IPAddress.Parse(_host), _port);
@@ -36,16 +43,15 @@ namespace WebServer
             while (true)
             {
                 var client = await tcpConnection.AcceptTcpClientAsync();
-                //TODO: parser socket to context
                 var stream = client.GetStream();
-                var content = stream.GetSequenceBytes();
+                var requestDispatcher = new RequestDispatcher(ServiceProvider, stream.GetBytes(), _protocol);
+                requestDispatcher.Process();
                 stream.Close();
             }
         }
 
-        public Task Stop(CancellationToken cancellationToken = default)
+        public async Task Stop(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
         }
 
         public IApplicationBuilder Use(Func<RequestDelegate, RequestDelegate> middleware)
@@ -57,6 +63,16 @@ namespace WebServer
         {
             //TODO:
             Start().GetAwaiter().GetResult();
+        }
+        
+        public RequestDelegate Build()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
     }
 }
