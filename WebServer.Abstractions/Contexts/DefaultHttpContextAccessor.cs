@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebServer.Abstractions.Contexts
 {
-    public class HttpContextAccessor : IHttpContextAccessor
+    public class DefaultHttpContextAccessor : IHttpContextAccessor
     {
         private readonly AsyncLocal<HttpContextHolder> _httpContextCurrent = new AsyncLocal<HttpContextHolder>();
         public HttpContext HttpContext { 
