@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using WebServer.Abstractions;
+using WebServer.Abstractions.Contexts;
 using WebServer.Handlers;
 using WebServer.Parsers;
 
@@ -15,21 +16,27 @@ namespace WebServer
     {
         private WebApplication _webApplication= null!;
         public WebApplicationBuilder() => _webApplication = new();
-        public WebApplicationBuilder AddHttpRequestParser()
+        internal WebApplicationBuilder AddHttpRequestParser()
         {
             this._webApplication.Services.AddSingleton<IHttpComponentParser, HttpRequestParser>();
             return this;
         }
 
-        public WebApplicationBuilder AddProtocolHandlerFactory()
+        internal WebApplicationBuilder AddProtocolHandlerFactory()
         {
             this._webApplication.Services.AddSingleton<IProtocolHandlerFactory, ProtocolHandlerFactory>();
             return this;
         }
 
-        public WebApplicationBuilder AddProtocolHandler()
+        internal WebApplicationBuilder AddProtocolHandler()
         {
             _webApplication.Services.AddSingleton<IProtocolHandler, Http11ProtocolHandler>();
+            return this;
+        }
+
+        internal WebApplicationBuilder AddHttpContextAccessor()
+        {
+            _webApplication.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
             return this;
         }
         public WebApplication Build() => _webApplication;

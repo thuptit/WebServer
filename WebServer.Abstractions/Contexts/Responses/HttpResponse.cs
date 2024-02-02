@@ -8,5 +8,6 @@ namespace WebServer.Abstractions.Contexts.Responses
 {
     public class HttpResponse
     {
+        public int StatusCode { get; set; }
     }
 }

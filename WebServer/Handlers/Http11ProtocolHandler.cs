@@ -19,7 +19,7 @@ namespace WebServer.Handlers
         public async Task Handle(byte[] buffer)
         {
             var httpRequest = GetHttpRequest(buffer);
-            var httpContext = new HttpContext(httpRequest);
+            var httpContext = new DefaultHttpContext(httpRequest);
             // through middleware
 
             //through controller

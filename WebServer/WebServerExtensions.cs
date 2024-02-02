@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using WebServer.Abstractions;
 
 namespace WebServer
 {
@@ -15,6 +16,10 @@ namespace WebServer
             int ok = stream.Read(bytes, 0, bytes.Length);
             //TODO: check if ok variable equals 0
             return bytes;
+        }
+        public static void UseMiddleware<T>(this IApplicationBuilder app)
+        {
+
         }
     }
 }

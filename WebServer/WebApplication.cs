@@ -24,13 +24,16 @@ namespace WebServer
         /// </summary>
         private string _protocol = HttpVersions.Http11;
 
-        public IServiceProvider ServiceProvider => Services.BuildServiceProvider();
+        public IServiceProvider ApplicationServices => Services.BuildServiceProvider();
 
         public IServiceCollection Services { get; }
+
+        private List<Func<RequestDelegate, RequestDelegate>> _middlewares = new();
         public static WebApplicationBuilder CreateWebBuilder() => new WebApplicationBuilder()
             .AddProtocolHandler()
             .AddHttpRequestParser()
-            .AddProtocolHandlerFactory();
+            .AddProtocolHandlerFactory()
+            .AddHttpContextAccessor();
 
         public WebApplication()
         {
@@ -44,7 +47,7 @@ namespace WebServer
             {
                 var client = await tcpConnection.AcceptTcpClientAsync();
                 var stream = client.GetStream();
-                var requestDispatcher = new RequestDispatcher(ServiceProvider, stream.GetBytes(), _protocol);
+                var requestDispatcher = new RequestDispatcher(ApplicationServices, stream.GetBytes(), _protocol);
                 requestDispatcher.Process();
                 stream.Close();
             }
@@ -56,18 +59,27 @@ namespace WebServer
 
         public IApplicationBuilder Use(Func<RequestDelegate, RequestDelegate> middleware)
         {
-            throw new NotImplementedException();
+            _middlewares.Add(middleware);
+            return this;
         }
 
         public void Run()
         {
-            //TODO:
             Start().GetAwaiter().GetResult();
         }
         
         public RequestDelegate Build()
         {
-            throw new NotImplementedException();
+            var requestDelegate = (RequestDelegate)(context =>
+            {
+                context.Response.StatusCode = 404;
+                return Task.CompletedTask;
+            });
+            for(int i = this._middlewares.Count; i >= 0; i--)
+            {
+                requestDelegate = this._middlewares[i](requestDelegate);
+            }
+            return requestDelegate; 
         }
 
         public void Dispose()

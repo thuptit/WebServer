@@ -9,15 +9,15 @@ using WebServer.Abstractions.Contexts.Responses;
 
 namespace WebServer.Abstractions.Contexts
 {
-    public class HttpContext
+    public abstract class HttpContext
     {
         public HttpContext(HttpRequest request)
         {
             Request = request;
         }
-        public HttpRequest Request { get; init; }
-        public HttpResponse Response { get; set; }
-        public ClaimsPrincipal Users { get; set; }
-        public ISession Session { get; set; }
+        public abstract HttpRequest Request { get; init; }
+        public abstract HttpResponse Response { get; set; }
+        public abstract ClaimsPrincipal Users { get; set; }
+        public abstract ISession Session { get; set; }
     }
 }
