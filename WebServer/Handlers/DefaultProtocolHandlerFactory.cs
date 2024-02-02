@@ -8,14 +8,14 @@ using WebServer.Abstractions.HttpProtocols;
 
 namespace WebServer.Handlers
 {
-    public class ProtocolHandlerFactory(IServiceProvider serviceProvider) : IProtocolHandlerFactory
+    public class DefaultProtocolHandlerFactory(IServiceProvider serviceProvider) : IProtocolHandlerFactory
     {
         private readonly IServiceProvider _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         public IProtocolHandler Create(string version)
         {
             if(version == HttpVersions.Http11)
             {
-                return new Http11ProtocolHandler(
+                return new DefaultHttp11ProtocolHandler(
                         serviceProvider,
                         (IHttpComponentParser)serviceProvider.GetService(typeof(IHttpComponentParser))
                     );

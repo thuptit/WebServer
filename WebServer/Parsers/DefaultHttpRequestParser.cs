@@ -8,7 +8,7 @@ using WebServer.Abstractions.Urls;
 
 namespace WebServer.Parsers;
 
-public class HttpRequestParser : IHttpComponentParser
+public class DefaultHttpRequestParser : IHttpComponentParser
 {
     public HttpRequest ParserHttpRequest(string content)
     {

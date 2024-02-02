@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using WebServer.Abstractions;
 using WebServer.Abstractions.Contexts;
 using WebServer.Handlers;
@@ -18,25 +19,25 @@ namespace WebServer
         public WebApplicationBuilder() => _webApplication = new();
         internal WebApplicationBuilder AddHttpRequestParser()
         {
-            this._webApplication.Services.AddSingleton<IHttpComponentParser, HttpRequestParser>();
+            this._webApplication.Services.TryAddSingleton<IHttpComponentParser, DefaultHttpRequestParser>();
             return this;
         }
 
         internal WebApplicationBuilder AddProtocolHandlerFactory()
         {
-            this._webApplication.Services.AddSingleton<IProtocolHandlerFactory, ProtocolHandlerFactory>();
+            this._webApplication.Services.TryAddSingleton<IProtocolHandlerFactory, DefaultProtocolHandlerFactory>();
             return this;
         }
 
         internal WebApplicationBuilder AddProtocolHandler()
         {
-            _webApplication.Services.AddSingleton<IProtocolHandler, Http11ProtocolHandler>();
+            _webApplication.Services.TryAddSingleton<IProtocolHandler, DefaultHttp11ProtocolHandler>();
             return this;
         }
 
         internal WebApplicationBuilder AddHttpContextAccessor()
         {
-            _webApplication.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+            _webApplication.Services.TryAddSingleton<IHttpContextAccessor, DefaultHttpContextAccessor>();
             return this;
         }
         public WebApplication Build() => _webApplication;
