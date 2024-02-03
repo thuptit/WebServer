@@ -4,5 +4,5 @@ namespace WebServer.Abstractions;
 
 public interface IRequestDispatcher
 {
-    HttpContext Process();
+    Task<HttpContext> Process();
 }

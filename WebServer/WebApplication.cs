@@ -23,10 +23,12 @@ namespace WebServer
         /// HTTP/1.1 is default if not set
         /// </summary>
         private string _protocol = HttpVersions.Http11;
-
+        
         public IServiceProvider ApplicationServices => Services.BuildServiceProvider();
 
         public IServiceCollection Services { get; }
+
+        public RequestDelegate Pipeline => BuildMiddleware();
 
         private List<Func<RequestDelegate, RequestDelegate>> _middlewares = new();
         public static WebApplicationBuilder CreateWebBuilder() => new WebApplicationBuilder()
@@ -48,8 +50,8 @@ namespace WebServer
             {
                 var client = await tcpConnection.AcceptTcpClientAsync();
                 var stream = client.GetStream();
-                var requestDispatcher = new RequestDispatcher(ApplicationServices, stream.GetBytes(), _protocol);
-                requestDispatcher.Process();
+                var requestDispatcher = new RequestDispatcher(ApplicationServices, stream.GetBytes(), _protocol, Pipeline);
+                await requestDispatcher.Process();
                 stream.Close();
             }
         }
@@ -69,7 +71,7 @@ namespace WebServer
             Start().GetAwaiter().GetResult();
         }
         
-        public RequestDelegate Build()
+        private RequestDelegate BuildMiddleware()
         {
             var requestDelegate = (RequestDelegate)(context =>
             {
@@ -78,7 +80,7 @@ namespace WebServer
             });
             for(int i = this._middlewares.Count; i >= 0; i--)
             {
-                requestDelegate = this._middlewares[i](requestDelegate);
+                requestDelegate = _middlewares[i](requestDelegate);
             }
             return requestDelegate; 
         }

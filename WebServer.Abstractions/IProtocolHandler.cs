@@ -9,5 +9,6 @@ namespace WebServer.Abstractions
     public interface IProtocolHandler
     {
         Task Handle(byte[] buffer);
+        Task ProcessPipeline(RequestDelegate middleware);
     }
 }

@@ -10,6 +10,5 @@ namespace WebServer.Abstractions
     {
         IServiceProvider ApplicationServices { get; }
         IApplicationBuilder Use(Func<RequestDelegate, RequestDelegate> middleware);
-        RequestDelegate Build();
     }
 }
