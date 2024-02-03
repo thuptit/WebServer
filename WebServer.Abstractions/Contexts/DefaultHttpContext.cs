@@ -11,13 +11,16 @@ namespace WebServer.Abstractions.Contexts
 {
     public class DefaultHttpContext : HttpContext
     {
-        public DefaultHttpContext(HttpRequest request) : base(request)
+        public DefaultHttpContext(HttpRequest request, IServiceProvider serviceProvider)
         {
+            Request = request;
+            RequestServices = serviceProvider;
         }
 
-        public override HttpRequest Request { get => throw new NotImplementedException(); init => throw new NotImplementedException(); }
-        public override HttpResponse Response { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override ClaimsPrincipal Users { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public override ISession Session { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public override HttpRequest Request { get; }
+        public override HttpResponse Response { get ; set ; }
+        public override ClaimsPrincipal Users { get ; set; }
+        public override ISession Session { get ; set; }
+        public override IServiceProvider RequestServices { get; }
     }
 }

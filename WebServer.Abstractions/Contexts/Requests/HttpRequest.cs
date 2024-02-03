@@ -7,7 +7,7 @@ using WebServer.Abstractions.Urls;
 
 namespace WebServer.Abstractions.Contexts.Requests
 {
-    public class HttpRequest
+    public sealed class HttpRequest
     {
         public HttpRequest(string httpMethod, HttpRequestHeader header, object? body, HttpUrl httpUrl)
         {
