@@ -47,6 +47,7 @@ namespace WebServer
             _webApplication.Services.TryAddScoped<IMiddlewareFactory, MiddlewareFactory>();
             return this;
         }
+
         public WebApplication Build() => _webApplication;
     }
 }

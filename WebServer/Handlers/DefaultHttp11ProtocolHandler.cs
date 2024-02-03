@@ -18,11 +18,11 @@ namespace WebServer.Handlers
         {
             var httpRequest = GetHttpRequest(buffer);
             httpContextAccessor.HttpContext = new DefaultHttpContext(httpRequest, serviceProvider);
-            // through middleware
+        }
 
-            //through controller
-
-            //received httpcontext
+        public async Task ProcessPipeline(RequestDelegate middleware)
+        {
+             await middleware.Invoke(httpContextAccessor.HttpContext);
         }
 
         private HttpRequest GetHttpRequest(byte[] bytes)
