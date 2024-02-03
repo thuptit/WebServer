@@ -33,7 +33,8 @@ namespace WebServer
             .AddProtocolHandler()
             .AddHttpRequestParser()
             .AddProtocolHandlerFactory()
-            .AddHttpContextAccessor();
+            .AddHttpContextAccessor()
+            .AddMiddlewareFactory();
 
         public WebApplication()
         {

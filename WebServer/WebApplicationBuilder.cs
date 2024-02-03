@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using WebServer.Abstractions;
 using WebServer.Abstractions.Contexts;
 using WebServer.Handlers;
+using WebServer.Middlewares;
 using WebServer.Parsers;
 
 namespace WebServer
@@ -38,6 +39,12 @@ namespace WebServer
         internal WebApplicationBuilder AddHttpContextAccessor()
         {
             _webApplication.Services.TryAddSingleton<IHttpContextAccessor, DefaultHttpContextAccessor>();
+            return this;
+        }
+
+        internal WebApplicationBuilder AddMiddlewareFactory()
+        {
+            _webApplication.Services.TryAddScoped<IMiddlewareFactory, MiddlewareFactory>();
             return this;
         }
         public WebApplication Build() => _webApplication;

@@ -11,15 +11,13 @@ using WebServer.Abstractions.HttpProtocols;
 
 namespace WebServer.Handlers
 {
-    public class DefaultHttp11ProtocolHandler(IServiceProvider serviceProvider, IHttpComponentParser httpComponentParser) : IProtocolHandler
+    public class DefaultHttp11ProtocolHandler(IServiceProvider serviceProvider, IHttpComponentParser httpComponentParser, IHttpContextAccessor httpContextAccessor) 
+        : IProtocolHandler
     {
-        private readonly IServiceProvider _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-        private readonly IHttpComponentParser _httpParser = httpComponentParser ?? throw new ArgumentNullException(nameof(httpComponentParser));
-
         public async Task Handle(byte[] buffer)
         {
             var httpRequest = GetHttpRequest(buffer);
-            var httpContext = new DefaultHttpContext(httpRequest);
+            httpContextAccessor.HttpContext = new DefaultHttpContext(httpRequest, serviceProvider);
             // through middleware
 
             //through controller
@@ -30,7 +28,7 @@ namespace WebServer.Handlers
         private HttpRequest GetHttpRequest(byte[] bytes)
         {
             var content = Encoding.UTF8.GetString(bytes);
-            return _httpParser.ParserHttpRequest(content);
+            return httpComponentParser.ParserHttpRequest(content);
         }
     }
 }

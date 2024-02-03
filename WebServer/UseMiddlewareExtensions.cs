@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WebServer.Abstractions;
+﻿using WebServer.Abstractions;
 
 namespace WebServer
 {
@@ -26,7 +21,22 @@ namespace WebServer
         {
             return app.Use((next) => async (context) =>
             {
-                //TODO: invoke method in here
+                var middlewareFactory = (IMiddlewareFactory?) context.RequestServices.GetService(typeof(IMiddlewareFactory));
+                var middleware = middlewareFactory != null ? middlewareFactory.Create(middlewareType) : throw new InvalidOperationException(nameof(IMiddlewareFactory));
+                if (middleware == null)
+                    throw new InvalidOperationException(nameof(IMiddleware));
+
+                try
+                {
+                    await middleware.InvokeAsync(context, next);
+                }
+                finally
+                {
+                    //TODO; release middleware
+                }
+
+                middlewareFactory = null;
+                middleware = null;
             });
         }
     }
