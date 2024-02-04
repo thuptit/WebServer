@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebServer.Abstractions.Contexts;
 
 namespace WebServer.Abstractions
 {
     public interface IProtocolHandler
     {
-        Task Handle(byte[] buffer);
-        Task ProcessPipeline(RequestDelegate middleware);
+        Task<HttpContext> StartProcessAsync(byte[] buffer);
+        Task<HttpContext> ProcessPipelineAsync(RequestDelegate middleware);
     }
 }

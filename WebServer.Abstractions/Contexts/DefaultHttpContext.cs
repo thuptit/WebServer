@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using WebServer.Abstractions.Contexts.Requests;
 using WebServer.Abstractions.Contexts.Responses;
 
@@ -18,7 +13,7 @@ namespace WebServer.Abstractions.Contexts
         }
 
         public override HttpRequest Request { get; }
-        public override HttpResponse Response { get ; set ; }
+        public override HttpResponse Response { get; set; } = new();
         public override ClaimsPrincipal Users { get ; set; }
         public override ISession Session { get ; set; }
         public override IServiceProvider RequestServices { get; }

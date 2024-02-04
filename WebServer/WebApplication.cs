@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using WebServer.Abstractions;
 using WebServer.Abstractions.HttpProtocols;
@@ -51,7 +52,11 @@ namespace WebServer
                 var client = await tcpConnection.AcceptTcpClientAsync();
                 var stream = client.GetStream();
                 var requestDispatcher = new RequestDispatcher(ApplicationServices, stream.GetBytes(), _protocol, Pipeline);
-                await requestDispatcher.Process();
+                var httpContext = await requestDispatcher.Process();
+                var response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nHello from the server!";
+                var responseData = Encoding.ASCII.GetBytes(response);
+                stream.Write(responseData, 0, responseData.Length);
+                await stream.FlushAsync();
                 stream.Close();
             }
         }
@@ -78,7 +83,7 @@ namespace WebServer
                 context.Response.StatusCode = 404;
                 return Task.CompletedTask;
             });
-            for(int i = this._middlewares.Count; i >= 0; i--)
+            for(int i = this._middlewares.Count - 1; i >= 0; i--)
             {
                 requestDelegate = _middlewares[i](requestDelegate);
             }
