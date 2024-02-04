@@ -50,14 +50,15 @@ namespace WebServer
             while (true)
             {
                 var client = await tcpConnection.AcceptTcpClientAsync();
-                var stream = client.GetStream();
-                var requestDispatcher = new RequestDispatcher(ApplicationServices, stream.GetBytes(), _protocol, Pipeline);
-                var httpContext = await requestDispatcher.Process();
-                var response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nHello from the server!";
-                var responseData = Encoding.ASCII.GetBytes(response);
-                stream.Write(responseData, 0, responseData.Length);
-                await stream.FlushAsync();
-                stream.Close();
+                using (var stream = client.GetStream())
+                {
+                    var requestDispatcher = new RequestDispatcher(ApplicationServices, stream.GetBytes(), _protocol, Pipeline);
+                    var httpContext = await requestDispatcher.Process();
+                    var response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nHello from the server!";
+                    var responseData = Encoding.ASCII.GetBytes(response);
+                    stream.Write(responseData, 0, responseData.Length);
+                    await stream.FlushAsync();
+                }
             }
         }
 
