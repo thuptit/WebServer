@@ -12,7 +12,7 @@ namespace WebServer
     {
         public static byte[] GetBytes(this NetworkStream stream)
         {
-            var bytes = new byte[2048];
+            var bytes = new byte[stream.Socket.Available];
             int ok = stream.Read(bytes, 0, bytes.Length);
             //TODO: check if ok variable equals 0
             return bytes;

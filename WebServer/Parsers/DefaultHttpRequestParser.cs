@@ -24,7 +24,7 @@ public class DefaultHttpRequestParser : IHttpComponentParser
         var httpMethod = requestLineParts[0];
         var requestUri = requestLineParts[1];
 
-        var httpRequestHeader = new HttpRequestHeader();
+        var httpRequestHeader = new HttpHeader();
         for (int i = 1; i < headerLines.Length; i++)
         {
             string[] headerParts = headerLines[i].Split(new char[] { ':' }, 2);

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WebServer.Abstractions.Contexts.Requests
 {
-    public class HttpRequestHeader : Dictionary<string, object>
+    public class HttpHeader : Dictionary<string, object>
     {
     }
 }

@@ -10,8 +10,8 @@ public class RequestDispatcher(IServiceProvider serviceProvider, byte[] bytes, s
     public async Task<HttpContext> Process()
     {
         var protocolHandler = _handlerFactory.Create(verions);
-        await protocolHandler.Handle(bytes);
-        await protocolHandler.ProcessPipeline(middleware);
-        return null;
+        await protocolHandler.StartProcessAsync(bytes);
+        var httpContext = await protocolHandler.ProcessPipelineAsync(middleware);
+        return httpContext;
     }
 }

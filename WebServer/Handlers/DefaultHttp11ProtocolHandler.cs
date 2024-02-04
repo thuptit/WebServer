@@ -14,15 +14,17 @@ namespace WebServer.Handlers
     public class DefaultHttp11ProtocolHandler(IServiceProvider serviceProvider, IHttpComponentParser httpComponentParser, IHttpContextAccessor httpContextAccessor) 
         : IProtocolHandler
     {
-        public async Task Handle(byte[] buffer)
+        public Task<HttpContext> StartProcessAsync(byte[] buffer)
         {
             var httpRequest = GetHttpRequest(buffer);
             httpContextAccessor.HttpContext = new DefaultHttpContext(httpRequest, serviceProvider);
+            return Task.FromResult(httpContextAccessor.HttpContext);
         }
 
-        public async Task ProcessPipeline(RequestDelegate middleware)
+        public async Task<HttpContext> ProcessPipelineAsync(RequestDelegate middleware)
         {
              await middleware.Invoke(httpContextAccessor.HttpContext);
+             return httpContextAccessor.HttpContext;
         }
 
         private HttpRequest GetHttpRequest(byte[] bytes)

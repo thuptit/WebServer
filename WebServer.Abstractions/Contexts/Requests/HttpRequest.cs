@@ -9,7 +9,7 @@ namespace WebServer.Abstractions.Contexts.Requests
 {
     public sealed class HttpRequest
     {
-        public HttpRequest(string httpMethod, HttpRequestHeader header, object? body, HttpUrl httpUrl)
+        public HttpRequest(string httpMethod, HttpHeader header, object? body, HttpUrl httpUrl)
         {
             HttpMethod = httpMethod;
             Headers = header;
@@ -18,7 +18,7 @@ namespace WebServer.Abstractions.Contexts.Requests
         }
         public HttpUrl HttpUrl { get; init; }
         public string HttpMethod { get; init; }
-        public HttpRequestHeader Headers { get; init; }
+        public HttpHeader Headers { get; init; }
         public object? Body { get; init; }
     }
 }
