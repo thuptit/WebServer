@@ -27,6 +27,11 @@ namespace WebServer.Handlers
              return httpContextAccessor.HttpContext;
         }
 
+        public async Task ProcessResponseAsync()
+        {
+
+        }
+
         private HttpRequest GetHttpRequest(byte[] bytes)
         {
             var content = Encoding.UTF8.GetString(bytes);
