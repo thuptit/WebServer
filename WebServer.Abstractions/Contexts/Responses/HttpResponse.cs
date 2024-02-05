@@ -10,5 +10,6 @@ namespace WebServer.Abstractions.Contexts.Responses
         }
         public int StatusCode { get; set; }
         public HttpHeader Headers { get; set; }
+        public object Body { get; set; }
     }
 }

@@ -11,5 +11,6 @@ namespace WebServer.Abstractions
     {
         Task<HttpContext> StartProcessAsync(byte[] buffer);
         Task<HttpContext> ProcessPipelineAsync(RequestDelegate middleware);
+        Task ProcessResponseAsync();
     }
 }
