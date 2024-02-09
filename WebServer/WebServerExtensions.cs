@@ -5,6 +5,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using WebServer.Abstractions;
 
 namespace WebServer
@@ -22,6 +23,11 @@ namespace WebServer
         public static void UseMiddleware<T>(this IApplicationBuilder app) where T : IMiddleware
         {
             app.UseMiddleware(typeof(T));
+        }
+
+        public static void MapControllers(this IApplicationBuilder app)
+        {
+            
         }
     }
 }
