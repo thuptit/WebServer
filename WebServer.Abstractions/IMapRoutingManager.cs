@@ -9,7 +9,7 @@ namespace WebServer.Abstractions
 {
     public interface IMapRoutingManager
     {
-        Type GetControllerByRouteName(string routeName);
-        void Intialize(Assembly assembly); 
+        Type? GetControllerByRouteName(string routeName);
+        void Initialize(Assembly assembly); 
     }
 }
