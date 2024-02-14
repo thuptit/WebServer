@@ -16,6 +16,10 @@ namespace WebServer.Abstractions.Contexts
         public override HttpResponse Response { get; set; } = new();
         public override ClaimsPrincipal Users { get ; set; }
         public override ISession Session { get ; set; }
-        public override IServiceProvider RequestServices { get; }
+        public override IServiceProvider RequestServices { get; } = null!;
+        public override object GetEndpoint()
+        {
+            return Request.HttpUrl.Path;
+        }
     }
 }

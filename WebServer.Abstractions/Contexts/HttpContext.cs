@@ -16,5 +16,7 @@ namespace WebServer.Abstractions.Contexts
         public abstract ClaimsPrincipal Users { get; set; }
         public abstract ISession Session { get; set; }
         public abstract IServiceProvider RequestServices { get; }
+
+        public abstract object GetEndpoint();
     }
 }

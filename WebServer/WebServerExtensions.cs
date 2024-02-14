@@ -15,7 +15,7 @@ namespace WebServer
         public static byte[] GetBytes(this NetworkStream stream)
         {
             var bytes = new byte[stream.Socket.Available];
-            int numOfBytes = stream.Read(bytes, 0, bytes.Length);
+            var numOfBytes = stream.Read(bytes, 0, bytes.Length);
             if (numOfBytes == 0)
                 throw new EndOfStreamException("Socket was closed");
             return bytes;
