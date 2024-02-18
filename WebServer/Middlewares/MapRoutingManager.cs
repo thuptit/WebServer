@@ -21,7 +21,7 @@ namespace WebServer.Middlewares
         public void Initialize(Assembly assembly)
         {
             var types = assembly.GetTypes();
-            var controllerTypes = types.Where(t => typeof(ControllerBase).IsAssignableFrom(t) && !t.IsAbstract)
+            var controllerTypes = types.Where(t => t.GetCustomAttribute<ControllerAttribute>() is not null && !t.IsAbstract)
                 .ToList();
             foreach (var controllerType in controllerTypes.Where(x => x.GetCustomAttribute<MapRouteAttribute>() is not null))
             {
